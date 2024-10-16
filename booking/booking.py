@@ -72,6 +72,16 @@ class Booking():
         )
         self.implicity_waiting(2000)
     
-        
+    def select_dates(self, check_in_date, check_out_date):
+        self.click_locator(
+            query=f'span[data-date="{check_in_date}"]',
+            exception="Error in selecting the check in date"
+        )
+        self.click_locator(
+            query=f'span[data-date="{check_out_date}"]',
+            exception="Error in selecting the check out date"
+        )
+        self.implicity_waiting(2000)
+     
         
         
