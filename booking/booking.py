@@ -47,7 +47,19 @@ class Booking():
                   e, 
                   e.__traceback__.tb_frame
                 )
-     
+            
+    def multi_click_locator(self, query, exception="No Exception", timeout=3000, index=0):
+        try:
+            locator = self.page.locator(query)
+            locator.wait_for(state="visible", timeout=timeout)
+            for _ in range(index):
+                locator.click()
+        except Exception as e:
+            print(exception,
+                  e,
+                  e.__traceback__.tb_frame
+            )
+            
     def change_currency(self, currency="USD"):
             self.click_locator(
                 query='//*[@id="b2indexPage"]/div[2]/div/div/header/div/nav[1]/div[2]/span[1]/button',
@@ -82,6 +94,32 @@ class Booking():
             exception="Error in selecting the check out date"
         )
         self.implicity_waiting(2000)
+        
+    def select_confs(self, adults=1, rooms=1, children=0, age="0 years old"):
+        self.click_locator(
+            query='button[data-testid="occupancy-config"]',
+            exception="Error in selecting the occupancy config"
+        )
+        self.multi_click_locator(
+            query='//*[@id=":ri:"]/div/div[1]/div[2]/button[2]',
+            exception="Error in increasing the number of adults",
+            index=adults-2
+        )
+        self.multi_click_locator(
+            query='//*[@id=":ri:"]/div/div[5]/div[2]/button[2]',
+            exception="Error in increasing the number of rooms",
+            index=rooms-1
+        )
+        # self.implicity_waiting(1000)
+        # if children > 0:
+        # self.multi_click_locator(
+        #     query='//*[@id=":ri:"]/div/div[2]/div[2]/button[2]',
+        #     exception="Error in increasing the number of children",
+        #     index=children
+        # )
+            # self.implicity_waiting(1000)
+            # self.page.select_option('//*[@id=":r5n:"]', label=age)
+        self.implicity_waiting(3000)
      
         
         
