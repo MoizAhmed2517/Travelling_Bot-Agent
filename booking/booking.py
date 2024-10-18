@@ -95,31 +95,52 @@ class Booking():
         )
         self.implicity_waiting(2000)
         
-    def select_confs(self, adults=1, rooms=1, children=0, age="0 years old"):
+    def select_confs(self, adults=1, rooms=1, children=0, **kwargs):
+        children_ages = [kwargs.get(f'age_{i + 1}', '0 years old') for i in range(children)]
         self.click_locator(
             query='button[data-testid="occupancy-config"]',
             exception="Error in selecting the occupancy config"
         )
-        self.multi_click_locator(
-            query='//*[@id=":ri:"]/div/div[1]/div[2]/button[2]',
-            exception="Error in increasing the number of adults",
-            index=adults-2
+        if children == 0:
+            self.multi_click_locator(
+                query='//*[@id=":ri:"]/div/div[1]/div[2]/button[2]',
+                exception="Error in increasing the number of adults",
+                index=adults-2
+            )
+            self.multi_click_locator(
+                query='//*[@id=":ri:"]/div/div[3]/div[2]/button[2]',
+                exception="Error in increasing the number of rooms",
+                index=rooms-1
+            )
+        else:
+            pass
+            self.multi_click_locator(
+                query='//*[@id=":ri:"]/div/div[1]/div[2]/button[2]',
+                exception="Error in increasing the number of adults",
+                index=adults-2
+            )
+            self.multi_click_locator(
+                query='//*[@id=":ri:"]/div/div[2]/div[2]/button[2]',
+                exception="Error in increasing the number of children",
+                index=children
+            )
+            for i, age in enumerate(children_ages):
+                age_selector = f'xpath=/html/body/div[3]/div[2]/div/form/div/div[3]/div/div/div/div/div[3]/div[{i + 1}]/div/select'
+                self.page.locator(age_selector).select_option(label=age)
+                self.implicity_waiting(500)
+            self.multi_click_locator(
+                query='//*[@id=":ri:"]/div/div[5]/div[2]/button[2]',
+                exception="Error in increasing the number of rooms",
+                index=rooms-1
+            )
+            
+        self.click_locator(
+            query=f'button[type="submit"]',
+            exception="Error in searching for deals"
         )
-        self.multi_click_locator(
-            query='//*[@id=":ri:"]/div/div[5]/div[2]/button[2]',
-            exception="Error in increasing the number of rooms",
-            index=rooms-1
-        )
-        # self.implicity_waiting(1000)
-        # if children > 0:
-        # self.multi_click_locator(
-        #     query='//*[@id=":ri:"]/div/div[2]/div[2]/button[2]',
-        #     exception="Error in increasing the number of children",
-        #     index=children
-        # )
-            # self.implicity_waiting(1000)
-            # self.page.select_option('//*[@id=":r5n:"]', label=age)
         self.implicity_waiting(3000)
+        
+        
      
         
         
